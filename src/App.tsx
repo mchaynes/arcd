@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {isLayerUrl, traverse, TraverseResult} from "./arcgis/traversal";
-import {download, DownloadJob, JobState} from "./arcgis/download";
+import {download, DownloadJob} from "./arcgis/download";
 
 interface JobStatuses {
   [key: string]: DownloadJob
@@ -18,24 +18,23 @@ function App() {
     })
   }, [url])
 
+  function updateJob(url: string, job: DownloadJob) {
+    setJobs({
+      ...jobs,
+      [url]: job
+    })
+  }
+
   function startDownload() {
-    if (!jobs[url]) {
-      const job = download({
-        url: url,
-        outFile: "/Users/myles/out.gdb",
-        updateWatchers: (job) => {
-          console.log("received update")
-          setJobs({
-            ...jobs,
-            [url]: job,
-          })
-        }
-      }, )
-      setJobs({
-        ...jobs,
-        [url]: job,
-      })
+    // short circuit if we've already setup a job
+    if (jobs[url]) {
+      return
     }
+    const job = download({
+      url: url,
+      outFile: "/Users/myles/out.gdb",
+      updateWatchers: (job) => updateJob(url, job)
+    })
   }
 
   return (
