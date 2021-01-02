@@ -3,6 +3,7 @@ import Layer from "@arcgis/core/layers/Layer";
 
 export interface L extends Layer {
   name: string
+  url: string
 }
 
 export type TraverseResult = {
@@ -11,9 +12,16 @@ export type TraverseResult = {
 }
 
 export async function traverse(url: string): Promise<TraverseResult> {
-  return {
-    serverRoot: url,
-    layers: await recurseTree(url),
+  if(safeParseUrl(url)) {
+    return {
+      serverRoot: url,
+      layers: await recurseTree(url),
+    }
+  } else {
+    return {
+      serverRoot: url,
+      layers: []
+    }
   }
 }
 
@@ -51,13 +59,13 @@ function resolveLinks(url: string, dir: Directory): string[] {
   const links: string[] = []
   dir.folders?.forEach((folder) => links.push(`${protocol}//${hostname}${pathname}/${folder}`))
   dir.services?.map(service => {
-    let name = service.name
+    let {name, type} = service
     // a MapServer/FeatureServer/etc name can include the folder name, i.e.: 'Behavioralhealth/BHProvider'
     // at the point where we have this server, the url already contains the 'BehavioralHealth' part, so only add the 'BHProvider' part
     if (name.includes("/")) {
       name = name.split("/")[1]
     }
-    return `${protocol}//${hostname}${pathname}/${name}/${service.type}`
+    return `${protocol}//${hostname}${pathname}/${name}/${type}`
   }).forEach(layer => links.push(layer))
   dir.layers?.forEach(layer => links.push(`${protocol}//${hostname}${pathname}/${layer.id}`))
   return links
