@@ -17,7 +17,7 @@ function App() {
       <div>
         <form style={{paddingLeft: "20px"}}>
           <label >Url:</label><br/><br/>
-          <input type="text" id="url" name="url" onChange={event => setUrl(event.target.value)} value={url}/>
+          <input style={{width: "800px"}} type="text" id="url" name="url" onChange={event => setUrl(event.target.value)} value={url}/>
         </form>
         <pre>
               {JSON.stringify(layers.layers?.map(l => l.name), undefined, 2)}

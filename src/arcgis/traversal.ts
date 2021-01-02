@@ -28,12 +28,10 @@ export async function traverse(url: string): Promise<TraverseResult> {
 
 async function recurseTree(url: string): Promise<L[]> {
   if (isLayerUrl(url)) {
-    console.log(`determined to be a layer: ${url}`)
     const resp = await arcfetch(url)
     const layer: L = await resp.json()
     return [layer]
   } else {
-    console.log(`not a layer: ${url}`)
     const resp = await arcfetch(url)
     const dir: Directory = await resp.json()
     const links = resolveLinks(url, dir)
