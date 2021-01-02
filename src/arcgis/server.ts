@@ -171,6 +171,7 @@ export type Directory = {
     }[]
 }
 
+
 export async function arcfetch(url: string, init?: RequestInit): Promise<Response> {
     const parsed = new URL(url)
     parsed.searchParams.set("f", "json")

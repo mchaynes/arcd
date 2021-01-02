@@ -5,12 +5,10 @@ import {traverse, TraverseResult} from "./arcgis/traversal";
 function App() {
     const [layers, setLayers] = useState({} as TraverseResult)
     const [url, setUrl] = useState("https://gismaps.kingcounty.gov/arcgis/rest/services")
-    let getLayers = () => {
-        traverse(url).then(setLayers)
-    }
+
 
     useEffect(() => {
-      getLayers()
+      traverse(url).then(setLayers)
     }, [url])
 
     return (

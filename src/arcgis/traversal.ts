@@ -11,7 +11,7 @@ export type TraverseResult = {
   layers: L[]
 }
 
-export async function traverse(url: string): Promise<TraverseResult> {
+export async function traverse(url: string, opts?: RequestInit): Promise<TraverseResult> {
   if(safeParseUrl(url)) {
     return {
       serverRoot: url,
@@ -26,13 +26,13 @@ export async function traverse(url: string): Promise<TraverseResult> {
 }
 
 
-async function recurseTree(url: string): Promise<L[]> {
+async function recurseTree(url: string, opts?: RequestInit): Promise<L[]> {
   if (isLayerUrl(url)) {
-    const resp = await arcfetch(url)
+    const resp = await arcfetch(url, opts)
     const layer: L = await resp.json()
     return [layer]
   } else {
-    const resp = await arcfetch(url)
+    const resp = await arcfetch(url, opts)
     const dir: Directory = await resp.json()
     const links = resolveLinks(url, dir)
     const layers = []
