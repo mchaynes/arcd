@@ -12,15 +12,16 @@ export type TraverseResult = {
 }
 
 export async function traverse(url: string, opts?: RequestInit): Promise<TraverseResult> {
+  // only attempt to traverse if its a real url
   if(safeParseUrl(url)) {
     return {
       serverRoot: url,
-      layers: await recurseTree(url),
+      layers: await recurseTree(url, opts),
     }
   } else {
     return {
       serverRoot: url,
-      layers: []
+      layers: [],
     }
   }
 }
@@ -30,6 +31,7 @@ async function recurseTree(url: string, opts?: RequestInit): Promise<L[]> {
   if (isLayerUrl(url)) {
     const resp = await arcfetch(url, opts)
     const layer: L = await resp.json()
+    layer.url = url
     return [layer]
   } else {
     const resp = await arcfetch(url, opts)
@@ -70,18 +72,23 @@ function resolveLinks(url: string, dir: Directory): string[] {
 }
 
 // layer urls end with /<integer>, so check for that
-const layerUrlRegex = new RegExp("/[0-9]+")
+const layerUrlRegex = new RegExp("/[0-9]+$")
 
-export function isLayerUrl(url: string): boolean{
+/**
+ * Determines whether this URL looks like a URL to a layer or not (as opposed to a MapServer, etc)
+ */
+export function isLayerUrl(url: string): boolean {
   const parsed = safeParseUrl(url);
   return layerUrlRegex.test(parsed?.pathname ?? "")
 }
 
+/**
+ * Parses URL, returns undefined if the URL is invalid
+ */
 function safeParseUrl(url: string): URL|undefined {
   try {
     return new URL(url)
   } catch (e) {
-    console.log(`${url}: ${e}`)
     return undefined
   }
 }
