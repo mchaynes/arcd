@@ -1,8 +1,9 @@
 {
-  "name": "easyogr.com",
+  "name": "arcd.myleshaynes.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@arcgis/core": "^4.18.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -10,9 +11,13 @@
     "@types/node": "^12.12.69",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
+    "arcgis-js-api": "^4.18.0",
+    "eslint": "^6.8.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-scripts": "3.4.4",
+    "request": "^2.79.0",
+    "tslib": "^1.14.1",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -35,5 +40,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/arcgis-js-api": "^4.18.0",
+    "react-test-renderer": "^17.0.1"
   }
 }
